@@ -10,6 +10,7 @@
 #include <QDir>
 #include <algorithm>
 #include <random>
+#include <QMap>
 
 #include "territory.h"
 
@@ -25,11 +26,15 @@ public:
     Territory* getTerritoryByInedx(int index) const;
     Territory* getTerritoryByName(QString name) const;
 
+    const QMap<QString, QList<int> > getContinentInfo() const;
+    const QMap<QString, QList<int> > setContinentInfo();
+
 signals:
 
 
 private:
     const QList<Territory*> territories;
+    const QMap<QString, QList<int>> continentInfo;
 
     QList<Territory*> createTerritory();
 

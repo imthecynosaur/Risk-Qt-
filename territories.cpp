@@ -2,7 +2,8 @@
 
 Territories::Territories(QObject *parent)
     : QObject{parent},
-      territories{createTerritory()}
+      territories{createTerritory()},
+      continentInfo{setContinentInfo()}
 {
     qDebug() << "Territories created";
 }
@@ -18,10 +19,7 @@ QList<Territory *> Territories::createTerritory()
     QString filePath = QDir::toNativeSeparators("D:/C++/Qt projects/Risk/Risk/territories.json");
 
     QFile file(filePath);
-//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        qDebug() << "Error opening file";
-//        return;
-//    }
+
 
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -30,11 +28,6 @@ QList<Territory *> Territories::createTerritory()
 
     QJsonDocument doc = QJsonDocument::fromJson(contents.toUtf8());
 
-//    if (!doc.isObject()) {
-//        qDebug() << "JSON data is not an object";
-//        return;
-//    }
-//    doc.isObject();
     QJsonObject root = doc.object();
     QJsonArray continents = root.value("continents").toArray();
 
@@ -55,7 +48,6 @@ QList<Territory *> Territories::createTerritory()
                 neighbors.append(neighborIndex);
             }
 
-//            Territory* newTerritory = new Territory(continentName, index, name, neighbors);
             tempTerritories.append(new Territory(continentName, index, name, neighbors));
         }
     }
@@ -88,4 +80,20 @@ Territory *Territories::getTerritoryByName(QString name) const
     }
     qDebug() << "Not found!";
     return nullptr;
+}
+
+const QMap<QString, QList<int> > Territories::getContinentInfo() const
+{
+    return continentInfo;
+}
+
+const QMap<QString, QList<int> > Territories::setContinentInfo()
+{
+    QMap<QString, QList<int> > tempContinet;
+    foreach(Territory* territory, territories){
+        QList<int> tempValue {tempContinet.value(territory->getContinent())};
+        tempValue.append(territory->getIndex());
+        tempContinet.insert(territory->getContinent(),  QList<int> {tempValue});
+    }
+    return tempContinet;
 }
