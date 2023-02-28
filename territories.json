@@ -1,0 +1,78 @@
+{
+    "continents": [
+        {
+            "name": "North America",
+            "territories": [
+                {"index": 11, "name": "Alaska", "neighbors": [12, 16, 56]},
+                {"index": 16, "name": "Northwest Territory", "neighbors": [11, 12, 15, 17]},
+                {"index": 15, "name": "Greenland", "neighbors": [16, 17, 18, 32]},
+                {"index": 12, "name": "Alberta", "neighbors": [11, 16, 17, 19]},
+                {"index": 17, "name": "Ontario", "neighbors": [12, 14, 15, 16, 18, 19]},
+                {"index": 18, "name": "Quebec", "neighbors": [15, 17, 14]},
+                {"index": 19, "name": "Western United States", "neighbors": [12, 13, 14, 17]},
+                {"index": 14, "name": "Eastern United States", "neighbors": [17, 18, 19, 13]},
+                {"index": 13, "name": "Central America", "neighbors": [19, 14, 24]}
+            ]
+        },
+        {
+            "name": "South America",
+            "territories": [
+                {"index": 24, "name": "Venezuela", "neighbors": [13, 22, 23]},
+                {"index": 23, "name": "Peru", "neighbors": [24, 22, 21]},
+                {"index": 22, "name": "Brazil", "neighbors": [24, 23, 21, 45]},
+                {"index": 21, "name": "Argentina", "neighbors": [22, 23]}
+            ]
+        },
+        {
+            "name": "Europe",
+            "territories": [
+                {"index": 32, "name": "Iceland", "neighbors": [15, 31, 34]},
+                {"index": 34, "name": "Scandinavia", "neighbors": [31, 32, 33, 36]},
+                {"index": 36, "name": "Ukraine", "neighbors": [33, 34, 35, 511, 51, 57]},
+                {"index": 31, "name": "Great Britain", "neighbors": [32, 33, 34, 37]},
+                {"index": 33, "name": "Northern Europe", "neighbors": [31, 34, 35, 36, 37]},
+                {"index": 37, "name": "Western Europe", "neighbors": [31, 33, 35, 45]},
+                {"index": 35, "name": "Southern Europe", "neighbors": [33, 36, 37, 45, 43, 57]}
+            ]
+        },
+        {
+            "name": "Africa",
+            "territories": [
+                {"index": 45, "name": "North Africa", "neighbors": [22, 37, 35, 42, 41, 43]},
+                {"index": 43, "name": "Egypt", "neighbors": [35, 42, 45, 57]},
+                {"index": 42, "name": "East Africa", "neighbors": [41, 43, 45, 46, 44, 57]},
+                {"index": 41, "name": "Congo", "neighbors": [45, 42, 46]},
+                {"index": 46, "name": "South Africa", "neighbors": [41, 42, 44]},
+                {"index": 44, "name": "Madagascar", "neighbors": [42, 46]}
+
+            ]
+        },
+        {
+            "name": "Asia",
+            "territories": [
+                {"index": 511, "name": "Ural", "neighbors": [36, 51, 52, 510]},
+                {"index": 510, "name": "Siberia", "neighbors": [52, 54, 58, 511, 512]},
+                {"index": 512, "name": "Yakutsk", "neighbors": [510, 54, 56]},
+                {"index": 506, "name": "Kamchatka", "neighbors": [11, 54, 58, 55, 512]},
+                {"index": 504, "name": "Irkutsk", "neighbors": [56, 58, 510, 512]},
+                {"index": 508, "name": "Mongolia", "neighbors": [52, 54, 56, 55, 510]},
+                {"index": 505, "name": "Japan", "neighbors": [56, 58]},
+                {"index": 501, "name": "Afghanistan", "neighbors": [53, 52, 511, 57, 36]},
+                {"index": 502, "name": "China", "neighbors": [51, 53, 58, 59, 510, 511]},
+                {"index": 507, "name": "Middle East", "neighbors": [36, 35, 43, 42, 51, 53]},
+                {"index": 503, "name": "India", "neighbors": [51, 52, 57, 59]},
+                {"index": 509, "name": "Siam", "neighbors": [52, 53, 62]}
+            ]
+        },
+        {
+            "name": "Australia",
+            "territories": [
+                {"index": 63, "name": "New Guinea", "neighbors": [62, 64, 61]},
+                {"index": 61, "name": "Eastern Australia", "neighbors": [63, 64]},
+                {"index": 64, "name": "Western Australia", "neighbors": [62, 63, 61]},
+                {"index": 62, "name": "Indonesia", "neighbors": [63, 64, 59]}
+            ]
+        }
+    ]
+}
+    
