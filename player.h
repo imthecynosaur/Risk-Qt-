@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include "territory.h"
 
 class Player : public QObject
 {
@@ -12,21 +13,19 @@ public:
 
     int getNumber() const;
 
-
-//    void addTerritory(Territory*);
-//    void loseTerritory(Territory*);
-//    QList<Territory *> getTerritories() const;
+    void addTerritory(Territory*);
+    void loseTerritory(Territory*);
+    QList<Territory *> getTerritories() const;
 
 signals:
-    void addTerritorySignal(int playerNumber);
-    void loseTerritorySignal(int playerNumber);
+    void addTerritorySignal(int playerNumber, Territory* territoryPtr);
+    void loseTerritorySignal(int playerNumber, Territory* territoryPtr);
 
 private:
     int number;
 
-
-//    QList<Territory*> territories;
-//    int checkForContinent();
+    QList<Territory*> territories;
+    int checkForContinent();
 
 
 };

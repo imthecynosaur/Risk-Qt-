@@ -12,15 +12,15 @@ int Player::getNumber() const
     return number;
 }
 
-//void Player::addTerritory(Territory * territory)
-//{
-//    territories.append(territory);
-//}
+void Player::addTerritory(Territory * territory)
+{
+    territories.append(territory);
+}
 
-//QList<Territory *> Player::getTerritories() const
-//{
-//    return territories;
-//}
+QList<Territory *> Player::getTerritories() const
+{
+    return territories;
+}
 
 //int Player::checkForContinent()
 //{

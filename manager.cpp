@@ -10,9 +10,7 @@ void Manager::distributeTerritories()
 {
     int i = 1;
     foreach (Territory* territory, territories.getTerritories()) {
-//        territory->setOwnerNumber(i);
         addTerritoryToPlayer(territory, i);
-//        players[i-1]->addTerritory(territory);
         if (++i > players.size()){
             i %= players.size();
         }
@@ -29,14 +27,13 @@ void Manager::createPlayers(int playerCount)
 
 void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
 {
-//    foreach (Player* player, players) {
-//        if (player->getNumber() == playerNumber){
-//            player->addTerritory(territoryptr);
-//            return;
-//        }
-//    }
     territory->setOwnerNumber(playerNumber);
-
+    foreach (Player* player, players) {
+        if (player->getNumber() == playerNumber){
+            player->addTerritory(territory);
+            return;
+        }
+    }
 }
 
 QList<Player *> Manager::getPlayers() const

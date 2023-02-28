@@ -13,7 +13,9 @@ class Manager : public QObject
 public:
 
     explicit Manager(QObject *parent = nullptr);
+
     void distributeTerritories();
+
     void createPlayers(int playerCount);
     QList<Player *> getPlayers() const;
 
