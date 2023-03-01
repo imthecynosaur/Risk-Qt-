@@ -53,6 +53,75 @@ void Player::deployTroops(int troopsCount){
     showStatus();
 }
 
+
+
+
+
+
+
+void Player::attack()
+{
+    QTextStream stream(stdin);
+    QList<Territory*> eligibleTerritories{};
+    QList<int> territoryNumbers;
+    foreach (const auto& territory, territories) {
+        territoryNumbers.append(territory->getIndex());
+    }
+        for (const auto& territory : territories){
+            if (territory->getTroops() > 1){
+                for (auto neighbourTerritoryIndex : territory->getNeighbours()){
+//                    if (std::find(territoryNumbers.begin(), territoryNumbers.end(), neighbourTerritory.getNumber()) == territoryNumbers.end()){
+                    if (territoryNumbers.indexOf(neighbourTerritoryIndex) == -1){
+                        if (eligibleTerritories.indexOf(territory) == -1){
+                            eligibleTerritories.append(territory);
+                        }
+//                        eligibleTerritories.append(territory);
+//                        eligibleTerritories.erase(std::unique(eligibleTerritories.begin(), eligibleTerritories.end(), territoryEquality), eligibleTerritories.end());
+                        break;
+
+                    }
+                }
+            }
+        }
+
+        int choice{};
+
+        qDebug() << "ELIGIBLE TERRITORIES :";
+        for (auto& territory : eligibleTerritories){
+            qDebug() << eligibleTerritories.indexOf(territory)+1 << "- " << territory->getName() << "[" << territory->getTroops() << "]";
+        }
+        stream >> choice;
+        Territory* chosenTerritory = eligibleTerritories[choice-1];
+
+
+        QList<Territory*> availableEnemies{};
+        for (int territoryIndex : chosenTerritory->getNeighbours()){
+//            if (std::find(territoryNumbers.begin(), territoryNumbers.end(), territory.getNumber()) == territoryNumbers.end()){
+            if (territoryNumbers.indexOf(territoryIndex) == -1){
+                emit requestForEnemyInfoSignal(territoryIndex);
+//                qDebug() << "getting info of enemy :" << enemyTerritory->getName();
+                availableEnemies.append(enemyTerritory);
+            }
+        }
+        qDebug() << "AVAILABLE ENEMIES :";
+        foreach (const auto& enemy, availableEnemies) {
+            qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << enemy->getTroops();
+        }
+        stream >> choice;
+        Territory* enemyTerritory = availableEnemies[choice-1];
+
+        qDebug() << "attacking " << enemyTerritory->getName() << " from " << chosenTerritory->getName();
+}
+
+
+
+
+
+
+
+
+
+
 int Player::setDraftCount(){
     int draftCount{std::max(3, static_cast<int>(territories.size() / 3))};
     draftCount += checkForContinent();
@@ -64,6 +133,11 @@ void Player::fetchContinetInfo(const QMap<QString, QList<int> > continentInfo)
     this->continetInfo = continentInfo;
 }
 
+void Player::fetchEnemyTerritory(Territory * enemy)
+{
+    this->enemyTerritory = enemy;
+}
+
 int Player::checkForContinent()
 {
     int continentBouns{};
@@ -71,40 +145,40 @@ int Player::checkForContinent()
     foreach (const auto& territory, territories) {
         territoryNumbers.append(territory->getIndex());
     }
-        foreach (const auto& continent, continetInfo.keys()){
-            bool isComplete {true};
-            for (int territoryNumber : continetInfo.value(continent)){
-                if (std::find(territoryNumbers.begin(), territoryNumbers.end(), territoryNumber) == territoryNumbers.end()){
-                    isComplete = false;
-                    break;
-                }
+    foreach (const auto& continent, continetInfo.keys()){
+        bool isComplete {true};
+        for (int territoryNumber : continetInfo.value(continent)){
+            if (std::find(territoryNumbers.begin(), territoryNumbers.end(), territoryNumber) == territoryNumbers.end()){
+                isComplete = false;
+                break;
+            }
 
-            }
-            if (isComplete) {
-                int bonus{};
-                if (continent == "North America"){
-                    bonus = 5;
-                }
-                if (continent == "South America"){
-                    bonus = 2;
-                }
-                if (continent == "Europe"){
-                    bonus = 5;
-                }
-                if (continent == "Africa"){
-                    bonus = 3;
-                }
-                if (continent == "Asia"){
-                    bonus = 7;
-                }
-                if (continent == "Australia"){
-                    bonus = 2;
-                }
-                continentBouns += bonus;
-                qDebug() << "getting bonus troops from " << continent;
-            }
         }
-        return continentBouns;
+        if (isComplete) {
+            int bonus{};
+            if (continent == "North America"){
+                bonus = 5;
+            }
+            if (continent == "South America"){
+                bonus = 2;
+            }
+            if (continent == "Europe"){
+                bonus = 5;
+            }
+            if (continent == "Africa"){
+                bonus = 3;
+            }
+            if (continent == "Asia"){
+                bonus = 7;
+            }
+            if (continent == "Australia"){
+                bonus = 2;
+            }
+            continentBouns += bonus;
+            qDebug() << "getting bonus troops from " << continent;
+        }
+    }
+    return continentBouns;
 }
 
 void Player::showStatus()

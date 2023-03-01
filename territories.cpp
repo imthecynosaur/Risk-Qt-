@@ -102,3 +102,8 @@ void Territories::sendContinentInfo()
 {
     emit sendContinentInfoSignal(continentInfo);
 }
+
+void Territories::recieveTerritoryInfoRequest(int territoryIndex)
+{
+    emit sendTerritoryInfoSignal(getTerritoryByInedx(territoryIndex));
+}

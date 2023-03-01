@@ -53,15 +53,15 @@
                 {"index": 511, "name": "Ural", "neighbors": [36, 51, 52, 510]},
                 {"index": 510, "name": "Siberia", "neighbors": [52, 54, 58, 511, 512]},
                 {"index": 512, "name": "Yakutsk", "neighbors": [510, 54, 56]},
-                {"index": 506, "name": "Kamchatka", "neighbors": [11, 54, 58, 55, 512]},
-                {"index": 504, "name": "Irkutsk", "neighbors": [56, 58, 510, 512]},
-                {"index": 508, "name": "Mongolia", "neighbors": [52, 54, 56, 55, 510]},
-                {"index": 505, "name": "Japan", "neighbors": [56, 58]},
-                {"index": 501, "name": "Afghanistan", "neighbors": [53, 52, 511, 57, 36]},
-                {"index": 502, "name": "China", "neighbors": [51, 53, 58, 59, 510, 511]},
-                {"index": 507, "name": "Middle East", "neighbors": [36, 35, 43, 42, 51, 53]},
-                {"index": 503, "name": "India", "neighbors": [51, 52, 57, 59]},
-                {"index": 509, "name": "Siam", "neighbors": [52, 53, 62]}
+                {"index": 56, "name": "Kamchatka", "neighbors": [11, 54, 58, 55, 512]},
+                {"index": 54, "name": "Irkutsk", "neighbors": [56, 58, 510, 512]},
+                {"index": 58, "name": "Mongolia", "neighbors": [52, 54, 56, 55, 510]},
+                {"index": 55, "name": "Japan", "neighbors": [56, 58]},
+                {"index": 51, "name": "Afghanistan", "neighbors": [53, 52, 511, 57, 36]},
+                {"index": 52, "name": "China", "neighbors": [51, 53, 58, 59, 510, 511]},
+                {"index": 57, "name": "Middle East", "neighbors": [36, 35, 43, 42, 51, 53]},
+                {"index": 53, "name": "India", "neighbors": [51, 52, 57, 59]},
+                {"index": 59, "name": "Siam", "neighbors": [52, 53, 62]}
             ]
         },
         {

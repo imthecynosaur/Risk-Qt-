@@ -21,14 +21,19 @@ public:
 
     int setDraftCount();
     void deployTroops(int troopsCount);
+
+    void attack();
 signals:
+    void requestForEnemyInfoSignal(int enemyIndex);
 
 public slots:
     void fetchContinetInfo(const QMap<QString, QList<int>>);
+    void fetchEnemyTerritory(Territory*);
 
 private:
     int number;
 
+    Territory* enemyTerritory;
     QList<Territory*> territories;
 
     int checkForContinent();

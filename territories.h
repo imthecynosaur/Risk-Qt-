@@ -33,6 +33,10 @@ public:
 
 signals:
     void sendContinentInfoSignal(const QMap<QString, QList<int>>);
+    void sendTerritoryInfoSignal(Territory*);
+
+public slots:
+    void recieveTerritoryInfoRequest(int territoryIndex);
 
 private:
     const QList<Territory*> territories;
