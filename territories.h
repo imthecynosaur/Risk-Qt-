@@ -29,8 +29,10 @@ public:
     const QMap<QString, QList<int> > getContinentInfo() const;
     const QMap<QString, QList<int> > setContinentInfo();
 
-signals:
+    void sendContinentInfo();
 
+signals:
+    void sendContinentInfoSignal(const QMap<QString, QList<int>>);
 
 private:
     const QList<Territory*> territories;

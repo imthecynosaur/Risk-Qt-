@@ -97,3 +97,8 @@ const QMap<QString, QList<int> > Territories::setContinentInfo()
     }
     return tempContinet;
 }
+
+void Territories::sendContinentInfo()
+{
+    emit sendContinentInfoSignal(continentInfo);
+}

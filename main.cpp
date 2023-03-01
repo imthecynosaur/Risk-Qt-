@@ -8,8 +8,9 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     Manager manager;
-    manager.createPlayers(5);
+    manager.createPlayers(2);
     manager.distributeTerritories();
+
 
     foreach (Player* player, manager.getPlayers()) {
         foreach (Territory* territory, player->getTerritories()) {

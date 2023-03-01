@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QMap>
 #include "territory.h"
 
 class Player : public QObject
@@ -18,14 +19,17 @@ public:
     QList<Territory *> getTerritories() const;
 
 signals:
-    void addTerritorySignal(int playerNumber, Territory* territoryPtr);
-    void loseTerritorySignal(int playerNumber, Territory* territoryPtr);
+
+public slots:
+    void fetchContinetInfo(const QMap<QString, QList<int>>);
 
 private:
     int number;
 
     QList<Territory*> territories;
+
     int checkForContinent();
+     QMap<QString, QList<int> > continetInfo;
 
 
 };

@@ -21,8 +21,10 @@ void Manager::createPlayers(int playerCount)
 {
     for (int i=1; i<=playerCount; i++){
         Player* tempPlayer = new Player(i);
+        QObject::connect(&territories, &Territories::sendContinentInfoSignal, tempPlayer, &Player::fetchContinetInfo);
         players.append(tempPlayer);
     }
+    territories.sendContinentInfo();
 }
 
 void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
