@@ -23,6 +23,42 @@ QList<Territory *> Player::getTerritories() const
     return territories;
 }
 
+void Player::deployTroops(int troopsCount){
+    QTextStream stream(stdin);
+    while (troopsCount > 0){
+        qDebug() << "Remaining troops: " << troopsCount;
+       qDebug() << "[PLAYER " << getNumber() << "]: " << "where should troops be deployed, sir ?!";
+        showStatus();
+        int choice{};
+        stream >> choice;
+        if (choice == 0){
+            return;
+        }
+        if (choice > territories.size() || choice < 0){
+            qDebug() << "WRONG TERRITORY !";
+            deployTroops(troopsCount);
+            return;
+        }
+        qDebug() << "How many troops should be deployed my lord ?!" ;
+        int troopsToBeDeployed {};
+        stream >> troopsToBeDeployed;
+        if (troopsToBeDeployed > troopsCount){
+            qDebug() << "YOU DON'T HAVE THIS MUCH TROOPS MY LORD !";
+            deployTroops(troopsCount);
+            return;
+        }
+        territories[choice-1]->setTroops(territories[choice-1]->getTroops() + troopsToBeDeployed);
+        troopsCount -= troopsToBeDeployed;
+    }
+    showStatus();
+}
+
+int Player::setDraftCount(){
+    int draftCount{std::max(3, static_cast<int>(territories.size() / 3))};
+    draftCount += checkForContinent();
+    return draftCount;
+}
+
 void Player::fetchContinetInfo(const QMap<QString, QList<int> > continentInfo)
 {
     this->continetInfo = continentInfo;
@@ -69,6 +105,13 @@ int Player::checkForContinent()
             }
         }
         return continentBouns;
+}
+
+void Player::showStatus()
+{
+    for (const auto& territory : territories) {
+        qDebug() << territories.indexOf(territory) + 1 << "-" << territory->getName() << territory->getTroops();
+    }
 }
 
 //void Player::loseTerritory(Territory * territory)

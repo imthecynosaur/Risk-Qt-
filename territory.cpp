@@ -39,3 +39,13 @@ void Territory::setOwnerNumber(int newOwnerNumber)
 {
     ownerNumber = newOwnerNumber;
 }
+
+int Territory::getTroops() const
+{
+    return troops;
+}
+
+void Territory::setTroops(int newTroops)
+{
+    troops = newTroops;
+}

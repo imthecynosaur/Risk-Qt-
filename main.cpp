@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     foreach (Player* player, manager.getPlayers()) {
         foreach (Territory* territory, player->getTerritories()) {
-            qDebug() << territory->getName() << territory->getOwnerNumber();
+            qDebug() << territory->getName() << territory->getTroops();
         }
     }
 

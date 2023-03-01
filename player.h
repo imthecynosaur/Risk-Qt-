@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
+#include <QTextStream>
 #include "territory.h"
 
 class Player : public QObject
@@ -18,6 +19,8 @@ public:
     void loseTerritory(Territory*);
     QList<Territory *> getTerritories() const;
 
+    int setDraftCount();
+    void deployTroops(int troopsCount);
 signals:
 
 public slots:
@@ -29,8 +32,9 @@ private:
     QList<Territory*> territories;
 
     int checkForContinent();
-     QMap<QString, QList<int> > continetInfo;
+    QMap<QString, QList<int> > continetInfo;
 
+    void showStatus();
 
 };
 

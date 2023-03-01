@@ -23,6 +23,10 @@ public:
     int getOwnerNumber() const;
     void setOwnerNumber(int newOwnerNumber);
 
+
+    int getTroops() const;
+    void setTroops(int newTroops);
+
 signals:
 
 private:
@@ -31,6 +35,7 @@ private:
     QString name;
     QList<int> neighbours;
     int ownerNumber {-1};
+    int troops{1};
 
 
 };
