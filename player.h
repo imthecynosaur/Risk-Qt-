@@ -23,6 +23,9 @@ public:
     void deployTroops(int troopsCount);
 
     void attack();
+    QList<int> getTerritoryNumbers() const;
+    void setTerritoryNumbers();
+
 signals:
     void requestForEnemyInfoSignal(int enemyIndex);
 
@@ -31,13 +34,18 @@ public slots:
     void fetchEnemyTerritory(Territory*);
 
 private:
+    QTextStream stream;
     int number;
 
     Territory* enemyTerritory;
     QList<Territory*> territories;
+    QList<int> territoryNumbers;
 
     int checkForContinent();
     QMap<QString, QList<int> > continetInfo;
+
+    Territory* chooseTerritoryToAttackFrom();
+    Territory* chooseEnemyToAttack(Territory*);
 
     void showStatus();
 

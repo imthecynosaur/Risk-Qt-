@@ -3,9 +3,10 @@
 
 Player::Player(int number, QObject *parent)
     : QObject{parent},
-      number{number}
+      number{number},
+      stream{stdin}
 {
-//    this->connect(this, addTerritorySignal&, Territory&, Territory::);
+
 }
 
 int Player::getNumber() const
@@ -54,71 +55,10 @@ void Player::deployTroops(int troopsCount){
 }
 
 
-
-
-
-
-
 void Player::attack()
 {
-    QTextStream stream(stdin);
-    QList<Territory*> eligibleTerritories{};
-    QList<int> territoryNumbers;
-    foreach (const auto& territory, territories) {
-        territoryNumbers.append(territory->getIndex());
-    }
-        for (const auto& territory : territories){
-            if (territory->getTroops() > 1){
-                for (auto neighbourTerritoryIndex : territory->getNeighbours()){
-//                    if (std::find(territoryNumbers.begin(), territoryNumbers.end(), neighbourTerritory.getNumber()) == territoryNumbers.end()){
-                    if (territoryNumbers.indexOf(neighbourTerritoryIndex) == -1){
-                        if (eligibleTerritories.indexOf(territory) == -1){
-                            eligibleTerritories.append(territory);
-                        }
-//                        eligibleTerritories.append(territory);
-//                        eligibleTerritories.erase(std::unique(eligibleTerritories.begin(), eligibleTerritories.end(), territoryEquality), eligibleTerritories.end());
-                        break;
-
-                    }
-                }
-            }
-        }
-
-        int choice{};
-
-        qDebug() << "ELIGIBLE TERRITORIES :";
-        for (auto& territory : eligibleTerritories){
-            qDebug() << eligibleTerritories.indexOf(territory)+1 << "- " << territory->getName() << "[" << territory->getTroops() << "]";
-        }
-        stream >> choice;
-        Territory* chosenTerritory = eligibleTerritories[choice-1];
-
-
-        QList<Territory*> availableEnemies{};
-        for (int territoryIndex : chosenTerritory->getNeighbours()){
-//            if (std::find(territoryNumbers.begin(), territoryNumbers.end(), territory.getNumber()) == territoryNumbers.end()){
-            if (territoryNumbers.indexOf(territoryIndex) == -1){
-                emit requestForEnemyInfoSignal(territoryIndex);
-//                qDebug() << "getting info of enemy :" << enemyTerritory->getName();
-                availableEnemies.append(enemyTerritory);
-            }
-        }
-        qDebug() << "AVAILABLE ENEMIES :";
-        foreach (const auto& enemy, availableEnemies) {
-            qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << enemy->getTroops();
-        }
-        stream >> choice;
-        Territory* enemyTerritory = availableEnemies[choice-1];
-
-        qDebug() << "attacking " << enemyTerritory->getName() << " from " << chosenTerritory->getName();
+        chooseEnemyToAttack(chooseTerritoryToAttackFrom());
 }
-
-
-
-
-
-
-
 
 
 
@@ -136,6 +76,18 @@ void Player::fetchContinetInfo(const QMap<QString, QList<int> > continentInfo)
 void Player::fetchEnemyTerritory(Territory * enemy)
 {
     this->enemyTerritory = enemy;
+}
+
+QList<int> Player::getTerritoryNumbers() const
+{
+    return territoryNumbers;
+}
+
+void Player::setTerritoryNumbers()
+{
+    foreach (const auto& territory, territories) {
+        territoryNumbers.append(territory->getIndex());
+    }
 }
 
 int Player::checkForContinent()
@@ -179,6 +131,54 @@ int Player::checkForContinent()
         }
     }
     return continentBouns;
+}
+
+Territory *Player::chooseTerritoryToAttackFrom()
+{
+    QList<Territory*> eligibleTerritories{};
+    setTerritoryNumbers();
+        for (const auto& territory : territories){
+            if (territory->getTroops() > 1){
+                for (auto neighbourTerritoryIndex : territory->getNeighbours()){
+                    if (territoryNumbers.indexOf(neighbourTerritoryIndex) == -1){
+                        if (eligibleTerritories.indexOf(territory) == -1){
+                            eligibleTerritories.append(territory);
+                        }
+                        break;
+
+                    }
+                }
+            }
+        }
+
+        int choice{};
+
+        qDebug() << "ELIGIBLE TERRITORIES :";
+        for (auto& territory : eligibleTerritories){
+            qDebug() << eligibleTerritories.indexOf(territory)+1 << "- " << territory->getName() << "[" << territory->getTroops() << "]";
+        }
+        stream >> choice;
+        return eligibleTerritories[choice-1];
+}
+
+Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
+{
+    QList<Territory*> availableEnemies{};
+    for (int territoryIndex : attackingTerritory->getNeighbours()){
+        if (territoryNumbers.indexOf(territoryIndex) == -1){
+            emit requestForEnemyInfoSignal(territoryIndex);
+            availableEnemies.append(enemyTerritory);
+        }
+    }
+    qDebug() << "AVAILABLE ENEMIES :";
+    foreach (const auto& enemy, availableEnemies) {
+        qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << enemy->getTroops();
+    }
+    int choice;
+    stream >> choice;
+    Territory* enemyTerritory = availableEnemies[choice-1];
+    qDebug() << " NEW VERSION : attacking " << enemyTerritory->getName() << " from " << attackingTerritory->getName();
+    return enemyTerritory;
 }
 
 void Player::showStatus()
