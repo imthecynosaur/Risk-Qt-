@@ -203,9 +203,10 @@ void Player::showStatus()
 QList<int> Player::rollDice(int diceCount)
 {
     QList<int> result;
-    QRandomGenerator::global()->seed(QDateTime::currentMSecsSinceEpoch() / 1000);
+    QRandomGenerator generator;
+    generator.seed(QDateTime::currentMSecsSinceEpoch() % 1000000);
     for (int i = 0; i < diceCount; i++) {
-        result.append(QRandomGenerator::global()->bounded(1, 7));
+        result.append(generator.bounded(1, 7));
     }
     return result;
 }
@@ -214,8 +215,8 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
 {
     QList<int> attackersDice{rollDice(std::min(3, attacker->getTroops()-1))};
     QList<int> defendersDice{rollDice(std::min(2, defender->getTroops()))};
-    std::sort(attackersDice.begin(), attackersDice.end());
-    std::sort(defendersDice.begin(), defendersDice.end());
+    std::sort(attackersDice.begin(), attackersDice.end(), [](int a, int b){ return a > b; });
+    std::sort(defendersDice.begin(), defendersDice.end(), [](int a, int b){ return a > b; });
     qDebug() << "attacker's Dices:" << attackersDice;
     qDebug() << "defender's Dices:" << defendersDice;
     for (int i = 0; i < std::min(attackersDice.size(), defendersDice.size()); i++) {
