@@ -28,6 +28,7 @@ public:
     void setTroops(int newTroops);
 
 signals:
+    void ownerChanged(Territory*, int newOwner);
 
 private:
     QString continent;

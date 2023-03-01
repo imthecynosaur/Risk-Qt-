@@ -4,6 +4,7 @@ Manager::Manager(QObject *parent)
     : QObject{parent}
 {
     qDebug() << "manager created!" ;
+    connectSignals();
 }
 
 void Manager::distributeTerritories()
@@ -37,6 +38,13 @@ void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
             player->addTerritory(territory);
             return;
         }
+    }
+}
+
+void Manager::connectSignals()
+{
+    for (auto& territory : territories.getTerritories()) {
+        QObject::connect(territory, &Territory::ownerChanged, this, &Manager::addTerritoryToPlayer);
     }
 }
 

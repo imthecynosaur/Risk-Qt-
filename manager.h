@@ -30,6 +30,7 @@ public slots:
 private:
     QList<Player*> players;
     Territories territories;
+    void connectSignals();
 };
 
 #endif // MANAGER_H

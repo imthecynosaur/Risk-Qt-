@@ -4,8 +4,11 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
+#include <QRandomGenerator>
+#include "qdatetime.h"
 #include <QTextStream>
 #include "territory.h"
+
 
 class Player : public QObject
 {
@@ -48,6 +51,10 @@ private:
     Territory* chooseEnemyToAttack(Territory*);
 
     void showStatus();
+
+    QList<int> rollDice(int);
+
+    void attackPhase(Territory*, Territory*);
 
 };
 

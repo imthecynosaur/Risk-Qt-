@@ -57,7 +57,19 @@ void Player::deployTroops(int troopsCount){
 
 void Player::attack()
 {
-        chooseEnemyToAttack(chooseTerritoryToAttackFrom());
+    qDebug() << "Do you want to attack sir ?!";
+    qDebug() << "1 - YES";
+    qDebug() << "2 - NO";
+    int choice;
+    stream >> choice;
+    if (choice == 2){
+        return;
+    }
+    Territory* attacker {chooseTerritoryToAttackFrom()};
+    Territory* defender {chooseEnemyToAttack(attacker)};
+    attackPhase(attacker, defender);
+
+    attack();
 }
 
 
@@ -185,6 +197,48 @@ void Player::showStatus()
 {
     for (const auto& territory : territories) {
         qDebug() << territories.indexOf(territory) + 1 << "-" << territory->getName() << territory->getTroops();
+    }
+}
+
+QList<int> Player::rollDice(int diceCount)
+{
+    QList<int> result;
+    QRandomGenerator::global()->seed(QDateTime::currentMSecsSinceEpoch() / 1000);
+    for (int i = 0; i < diceCount; i++) {
+        result.append(QRandomGenerator::global()->bounded(1, 7));
+    }
+    return result;
+}
+
+void Player::attackPhase(Territory * attacker, Territory * defender)
+{
+    QList<int> attackersDice{rollDice(std::min(3, attacker->getTroops()-1))};
+    QList<int> defendersDice{rollDice(std::min(2, defender->getTroops()))};
+    std::sort(attackersDice.begin(), attackersDice.end());
+    std::sort(defendersDice.begin(), defendersDice.end());
+    qDebug() << "attacker's Dices:" << attackersDice;
+    qDebug() << "defender's Dices:" << defendersDice;
+    for (int i = 0; i < std::min(attackersDice.size(), defendersDice.size()); i++) {
+        if (defendersDice[i] >= attackersDice[i]){
+            qDebug() << "attacker:" << attacker->getTroops() << "->" << attacker->getTroops()-1;
+            attacker->setTroops(attacker->getTroops()-1);
+        }else {
+            qDebug() << "defender:" << defender->getTroops() << "->" << defender->getTroops()-1;
+            defender->setTroops(defender->getTroops()-1);
+        }
+    }
+    if(defender->getTroops() == 0){
+        emit defender->ownerChanged(defender, attacker->getOwnerNumber());
+        defender->setOwnerNumber(attacker->getOwnerNumber());
+        return;
+    }
+    qDebug() << "continue attacking?";
+    qDebug() << "1- YES";
+    qDebug() << "2- NO";
+    int choice;
+    stream >> choice;
+    if (choice == 1){
+        attackPhase(attacker, defender);
     }
 }
 
