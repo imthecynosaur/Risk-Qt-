@@ -54,6 +54,7 @@ void Manager::takeTerritoryFromPlayer(Territory *territory, int playerNumber)
         if (player->getNumber() == playerNumber){
             player->loseTerritory(territory);
             territory->setOwnerNumber(-1);
+            player->showStatus();
             return;
         }
     }

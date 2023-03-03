@@ -32,8 +32,9 @@ QList<Territory *> Player::getTerritories() const
 void Player::deployTroops(int troopsCount){
     QTextStream stream(stdin);
     while (troopsCount > 0){
+        qDebug() << "[PLAYER " << getNumber() << "]";
         qDebug() << "Remaining troops: " << troopsCount;
-       qDebug() << "[PLAYER " << getNumber() << "]: " << "where should troops be deployed, sir ?!";
+       qDebug()  << "where should troops be deployed, sir ?!";
         showStatus();
         int choice{};
         stream >> choice;
@@ -202,7 +203,7 @@ Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
     }
     qDebug() << "AVAILABLE ENEMIES :";
     foreach (const auto& enemy, availableEnemies) {
-        qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << enemy->getTroops();
+        qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << "TROOPS:"  << enemy->getTroops();
     }
     int choice;
     stream >> choice;
@@ -214,7 +215,7 @@ Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
 void Player::showStatus()
 {
     for (const auto& territory : territories) {
-        qDebug() << territories.indexOf(territory) + 1 << "-" << territory->getName() << territory->getTroops();
+        qDebug() << territories.indexOf(territory) + 1 << "-" << territory->getName() << "TROOPS:" << territory->getTroops();
     }
 }
 
@@ -250,7 +251,7 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
         return;
     }
     if(defender->getTroops() == 0){
-        emit defender->ownerChanged(defender, attacker->getOwnerNumber(), defender->getIndex());
+        emit defender->ownerChanged(defender, attacker->getOwnerNumber(), defender->getOwnerNumber());
         qDebug() << defender->getName() << "now belongs to PLAYER NUMBER" << defender->getOwnerNumber();
         transferTroops(attacker, defender);
         return;

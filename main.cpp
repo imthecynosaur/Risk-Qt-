@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 //        foreach (Territory* territory, player->getTerritories()) {
 //            qDebug() << territory->getName() << territory->getTroops();
 //        }
-        player->deployTroops(15);
+        player->deployTroops(5);
         player->attack();
     }
 

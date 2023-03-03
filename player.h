@@ -29,6 +29,8 @@ public:
     QList<int> getTerritoryNumbers() const;
     void setTerritoryNumbers();
 
+    void showStatus();
+
 signals:
     void requestForEnemyInfoSignal(int enemyIndex);
 
@@ -50,7 +52,7 @@ private:
     Territory* chooseTerritoryToAttackFrom();
     Territory* chooseEnemyToAttack(Territory*);
 
-    void showStatus();
+
 
     QList<int> rollDice(int);
 
