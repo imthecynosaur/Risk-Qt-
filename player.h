@@ -55,6 +55,7 @@ private:
     QList<int> rollDice(int);
 
     void attackPhase(Territory*, Territory*);
+    void transferTroops(Territory*, Territory*);
 
 };
 

@@ -23,14 +23,17 @@ signals:
 
 
 public slots:
-    void addTerritoryToPlayer(Territory* territory, int playerNumber);
-//    void takeTerritoryFromPlayer(int playerNumber, Territory* territoryptr = nullptr);
+    void changeTerritoryOwnership(Territory*, int, int);
+
 
 
 private:
     QList<Player*> players;
     Territories territories;
     void connectSignals();
+
+    void addTerritoryToPlayer(Territory* territory, int playerNumber);
+    void takeTerritoryFromPlayer(Territory* territoryptr, int playerNumber);
 };
 
 #endif // MANAGER_H

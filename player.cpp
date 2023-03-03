@@ -19,6 +19,11 @@ void Player::addTerritory(Territory * territory)
     territories.append(territory);
 }
 
+void Player::loseTerritory(Territory * territory)
+{
+    territories.removeAt(territories.indexOf(territory));
+}
+
 QList<Territory *> Player::getTerritories() const
 {
     return territories;
@@ -66,7 +71,15 @@ void Player::attack()
         return;
     }
     Territory* attacker {chooseTerritoryToAttackFrom()};
+    if (!attacker){
+        qDebug() << "can't initiate any other attacks, sir!";
+        return;
+    }
     Territory* defender {chooseEnemyToAttack(attacker)};
+    if (!defender){
+        qDebug() << "no more enemies left to attack, sir!";
+        return;
+    }
     attackPhase(attacker, defender);
 
     attack();
@@ -162,13 +175,15 @@ Territory *Player::chooseTerritoryToAttackFrom()
                 }
             }
         }
-
-        int choice{};
+        if (eligibleTerritories.size() == 0){
+            return nullptr;
+        }
 
         qDebug() << "ELIGIBLE TERRITORIES :";
         for (auto& territory : eligibleTerritories){
             qDebug() << eligibleTerritories.indexOf(territory)+1 << "- " << territory->getName() << "[" << territory->getTroops() << "]";
         }
+        int choice{};
         stream >> choice;
         return eligibleTerritories[choice-1];
 }
@@ -182,6 +197,9 @@ Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
             availableEnemies.append(enemyTerritory);
         }
     }
+    if (availableEnemies.size() == 0){
+        return nullptr;
+    }
     qDebug() << "AVAILABLE ENEMIES :";
     foreach (const auto& enemy, availableEnemies) {
         qDebug() << availableEnemies.indexOf(enemy)+1 << enemy->getName() << enemy->getTroops();
@@ -189,7 +207,7 @@ Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
     int choice;
     stream >> choice;
     Territory* enemyTerritory = availableEnemies[choice-1];
-    qDebug() << " NEW VERSION : attacking " << enemyTerritory->getName() << " from " << attackingTerritory->getName();
+    qDebug() << "attacking " << enemyTerritory->getName() << " from " << attackingTerritory->getName();
     return enemyTerritory;
 }
 
@@ -228,9 +246,13 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
             defender->setTroops(defender->getTroops()-1);
         }
     }
+    if(attacker->getTroops() == 1){
+        return;
+    }
     if(defender->getTroops() == 0){
-        emit defender->ownerChanged(defender, attacker->getOwnerNumber());
-        defender->setOwnerNumber(attacker->getOwnerNumber());
+        emit defender->ownerChanged(defender, attacker->getOwnerNumber(), defender->getIndex());
+        qDebug() << defender->getName() << "now belongs to PLAYER NUMBER" << defender->getOwnerNumber();
+        transferTroops(attacker, defender);
         return;
     }
     qDebug() << "continue attacking?";
@@ -243,10 +265,20 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
     }
 }
 
-//void Player::loseTerritory(Territory * territory)
-//{
-//    territories.removeAt(territories.indexOf(territory->getIndex()));
-//    qDebug() << "territory removed";
-//}
+void Player::transferTroops(Territory * fromTerritory, Territory * toTerritory)
+{
+    qDebug() << "how many troops should be deployed to the new territory, sir?";
+    qDebug() << fromTerritory->getTroops() << "-> ?(" << toTerritory->getTroops() << ")";
+    int transferredTroops;
+    stream >> transferredTroops;
+    if (transferredTroops >= fromTerritory->getTroops() || transferredTroops <= 0){
+        qDebug() << "You can't transfer this amount of troops, sir";
+        transferTroops(fromTerritory, toTerritory);
+        return;
+    }
+    fromTerritory->setTroops(fromTerritory->getTroops()-transferredTroops);
+    toTerritory->setTroops(transferredTroops);
+    showStatus();
+}
 
 

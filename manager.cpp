@@ -30,21 +30,10 @@ void Manager::createPlayers(int playerCount)
     territories.sendContinentInfo();
 }
 
-void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
-{
-    territory->setOwnerNumber(playerNumber);
-    foreach (Player* player, players) {
-        if (player->getNumber() == playerNumber){
-            player->addTerritory(territory);
-            return;
-        }
-    }
-}
-
 void Manager::connectSignals()
 {
     for (auto& territory : territories.getTerritories()) {
-        QObject::connect(territory, &Territory::ownerChanged, this, &Manager::addTerritoryToPlayer);
+        QObject::connect(territory, &Territory::ownerChanged, this, &Manager::changeTerritoryOwnership);
     }
 }
 
@@ -53,14 +42,33 @@ QList<Player *> Manager::getPlayers() const
     return players;
 }
 
-//void Manager::takeTerritoryFromPlayer(int playerNumber, Territory *territoryptr)
-//{
-//    foreach (Player* player, players) {
-//        if (player->getNumber() == playerNumber){
-//            player->loseTerritory(territoryptr);
-//            return;
-//        }
-//    }
-//}
+void Manager::changeTerritoryOwnership(Territory * territory, int newOwner, int previousOwner)
+{
+    takeTerritoryFromPlayer(territory, previousOwner);
+    addTerritoryToPlayer(territory, newOwner);
+}
+
+void Manager::takeTerritoryFromPlayer(Territory *territory, int playerNumber)
+{
+    foreach (Player* player, players) {
+        if (player->getNumber() == playerNumber){
+            player->loseTerritory(territory);
+            territory->setOwnerNumber(-1);
+            return;
+        }
+    }
+}
+
+void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
+{
+    territory->setOwnerNumber(playerNumber);
+    foreach (Player* player, players) {
+        if (player->getNumber() == playerNumber){
+            player->addTerritory(territory);
+            territory->setOwnerNumber(playerNumber);
+            return;
+        }
+    }
+}
 
 
