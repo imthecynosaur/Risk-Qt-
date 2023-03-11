@@ -294,9 +294,7 @@ void Player::getConnectedTerritories(Territory * territory, QList<int>& neighbou
         if (territoryNumbers.contains(neighbour)){
             if (!neighbours.contains(neighbour)){
                 neighbours.append(neighbour);
-//                qDebug() << neighbours;
                 emit requestForTerritoryInfoSignal(neighbour);
-//                qDebug() << "workin on" << requestedTerritory->getName();
                 getConnectedTerritories(requestedTerritory, neighbours);
             }
         }
@@ -344,5 +342,3 @@ void Player::forfeit()
     Territory* selectedDestination{requestedTerritory};
     transferTroops(selectedTerritory, selectedDestination, true);
 }
-
-

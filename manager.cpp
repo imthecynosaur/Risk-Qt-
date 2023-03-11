@@ -93,11 +93,15 @@ void Manager::gameLoop()
         }
     }
     qDebug() << "GAME STARTED";
-    while (true){
+    bool isRunning {true};
+    while (isRunning){
         for (const auto& player : players) {
             player->deployTroops(player->setDraftCount());
             player->attack();
-            if(checkForWin(winCondition)) break;
+            if(checkForWin(winCondition)){
+                isRunning = false;
+                break;
+            }
             player->forfeit();
         }
     }
@@ -114,5 +118,3 @@ void Manager::addTerritoryToPlayer(Territory* territory, int playerNumber)
         }
     }
 }
-
-
