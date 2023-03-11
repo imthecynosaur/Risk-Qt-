@@ -5,7 +5,6 @@ Territories::Territories(QObject *parent)
       territories{createTerritory()},
       continentInfo{setContinentInfo()}
 {
-    qDebug() << "Territories created";
 }
 
 const QList<Territory *> Territories::getTerritories() const

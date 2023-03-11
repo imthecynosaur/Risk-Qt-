@@ -61,7 +61,7 @@ private:
     void attackPhase(Territory*, Territory*);
     void transferTroops(Territory*, Territory*, bool);
 
-void getConnectedTerritories(Territory*, QList<int>&);
+    void getConnectedTerritories(Territory*, QList<int>&);
 
 };
 

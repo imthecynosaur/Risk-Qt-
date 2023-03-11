@@ -1,9 +1,9 @@
 #include "manager.h"
 
 Manager::Manager(QObject *parent)
-    : QObject{parent}
+    : QObject{parent},
+      stream{stdin}
 {
-    qDebug() << "manager created!" ;
     connectSignals();
 }
 
@@ -56,6 +56,49 @@ void Manager::takeTerritoryFromPlayer(Territory *territory, int playerNumber)
             territory->setOwnerNumber(-1);
             player->showStatus();
             return;
+        }
+    }
+}
+
+bool Manager::checkForWin(int winCondition)
+{
+    for (const auto& player : players) {
+        if (player->getTerritories().size() >= winCondition){
+            qDebug() << "PLAYER" << player->getNumber() << "WON THE GAME!";
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+void Manager::gameLoop()
+{
+    qDebug() << "How many players will be playing?!";
+    int playerCount;
+    stream >> playerCount;
+    createPlayers(playerCount);
+
+    qDebug() << "How many territories does the winner have to have under control?";
+    int winCondition;
+    stream >> winCondition;
+
+    distributeTerritories();
+
+    qDebug() << "Initial distribution";
+    for (int i = 0; i < 2; ++i) {
+        for (const auto& player : players) {
+            player->deployTroops(3);
+        }
+    }
+    qDebug() << "GAME STARTED";
+    while (true){
+        for (const auto& player : players) {
+            player->deployTroops(player->setDraftCount());
+            player->attack();
+            if(checkForWin(winCondition)) break;
+            player->forfeit();
         }
     }
 }

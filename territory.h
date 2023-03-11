@@ -36,7 +36,7 @@ private:
     QString name;
     QList<int> neighbours;
     int ownerNumber {-1};
-    int troops{5};
+    int troops{1};
 
 
 };
