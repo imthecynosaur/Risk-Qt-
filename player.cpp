@@ -17,11 +17,13 @@ int Player::getNumber() const
 void Player::addTerritory(Territory * territory)
 {
     territories.append(territory);
+    setTerritoryNumbers();
 }
 
 void Player::loseTerritory(Territory * territory)
 {
     territories.removeAt(territories.indexOf(territory));
+    setTerritoryNumbers();
 }
 
 QList<Territory *> Player::getTerritories() const
@@ -82,7 +84,6 @@ void Player::attack()
         return;
     }
     attackPhase(attacker, defender);
-
     attack();
 }
 
@@ -99,9 +100,9 @@ void Player::fetchContinetInfo(const QMap<QString, QList<int> > continentInfo)
     this->continetInfo = continentInfo;
 }
 
-void Player::fetchEnemyTerritory(Territory * enemy)
+void Player::fetchRequestedTerritory(Territory * territory)
 {
-    this->enemyTerritory = enemy;
+    this->requestedTerritory = territory;
 }
 
 QList<int> Player::getTerritoryNumbers() const
@@ -111,6 +112,7 @@ QList<int> Player::getTerritoryNumbers() const
 
 void Player::setTerritoryNumbers()
 {
+    territoryNumbers.clear();
     foreach (const auto& territory, territories) {
         territoryNumbers.append(territory->getIndex());
     }
@@ -194,8 +196,8 @@ Territory *Player::chooseEnemyToAttack(Territory * attackingTerritory)
     QList<Territory*> availableEnemies{};
     for (int territoryIndex : attackingTerritory->getNeighbours()){
         if (territoryNumbers.indexOf(territoryIndex) == -1){
-            emit requestForEnemyInfoSignal(territoryIndex);
-            availableEnemies.append(enemyTerritory);
+            emit requestForTerritoryInfoSignal(territoryIndex);
+            availableEnemies.append(requestedTerritory);
         }
     }
     if (availableEnemies.size() == 0){
@@ -253,7 +255,7 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
     if(defender->getTroops() == 0){
         emit defender->ownerChanged(defender, attacker->getOwnerNumber(), defender->getOwnerNumber());
         qDebug() << defender->getName() << "now belongs to PLAYER NUMBER" << defender->getOwnerNumber();
-        transferTroops(attacker, defender);
+        transferTroops(attacker, defender, false);
         return;
     }
     qDebug() << "continue attacking?";
@@ -266,7 +268,7 @@ void Player::attackPhase(Territory * attacker, Territory * defender)
     }
 }
 
-void Player::transferTroops(Territory * fromTerritory, Territory * toTerritory)
+void Player::transferTroops(Territory * fromTerritory, Territory * toTerritory, bool isFriendly)
 {
     qDebug() << "how many troops should be deployed to the new territory, sir?";
     qDebug() << fromTerritory->getTroops() << "-> ?(" << toTerritory->getTroops() << ")";
@@ -274,12 +276,73 @@ void Player::transferTroops(Territory * fromTerritory, Territory * toTerritory)
     stream >> transferredTroops;
     if (transferredTroops >= fromTerritory->getTroops() || transferredTroops <= 0){
         qDebug() << "You can't transfer this amount of troops, sir";
-        transferTroops(fromTerritory, toTerritory);
+        transferTroops(fromTerritory, toTerritory, isFriendly);
         return;
     }
     fromTerritory->setTroops(fromTerritory->getTroops()-transferredTroops);
-    toTerritory->setTroops(transferredTroops);
+    if (isFriendly){
+        toTerritory->setTroops(toTerritory->getTroops()+transferredTroops);
+    }else{
+        toTerritory->setTroops(transferredTroops);
+    }
     showStatus();
+}
+
+void Player::getConnectedTerritories(Territory * territory, QList<int>& neighbours)
+{
+    foreach (int neighbour, territory->getNeighbours()) {
+        if (territoryNumbers.contains(neighbour)){
+            if (!neighbours.contains(neighbour)){
+                neighbours.append(neighbour);
+//                qDebug() << neighbours;
+                emit requestForTerritoryInfoSignal(neighbour);
+//                qDebug() << "workin on" << requestedTerritory->getName();
+                getConnectedTerritories(requestedTerritory, neighbours);
+            }
+        }
+    }
+}
+
+void Player::forfeit()
+{
+    setTerritoryNumbers();
+    qDebug() << "do you want to forfeit sir?";
+    qDebug() << "1-YES";
+    qDebug() << "2-NO";
+    int choice;
+    stream >> choice;
+    if (choice == 2){
+        return;
+    }
+    qDebug() << "Available Territories :";
+    QList<Territory*> availableTerritories;
+    foreach (const auto& territory, territories) {
+        if (territory->getTroops() > 1){
+            for (int neighbour : territory->getNeighbours()) {
+                if (territoryNumbers.contains(neighbour)){
+                    availableTerritories.append(territory);
+                    qDebug() << availableTerritories.size() << "-" << territory->getName() << "Troops:" << territory->getTroops();
+                    break;
+                }
+            }
+        }
+    }
+    stream >> choice;
+    Territory* selectedTerritory = availableTerritories[choice-1];
+    qDebug() << selectedTerritory->getName() << "selected";
+
+    qDebug() << "Available Destinations :";
+    QList<int> availableDestinations;
+    getConnectedTerritories(selectedTerritory, availableDestinations);
+    availableDestinations.removeAt(availableDestinations.indexOf(selectedTerritory->getIndex()));
+    for (int destination : availableDestinations) {
+        emit requestForTerritoryInfoSignal(destination);
+        qDebug() << availableDestinations.indexOf(destination) + 1 << "-" << requestedTerritory->getName();
+    }
+    stream >> choice;
+    emit requestForTerritoryInfoSignal(availableDestinations[choice-1]);
+    Territory* selectedDestination{requestedTerritory};
+    transferTroops(selectedTerritory, selectedDestination, true);
 }
 
 

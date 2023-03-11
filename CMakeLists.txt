@@ -22,6 +22,7 @@ add_executable(Risk
   manager.cpp
   territories.h
   territories.cpp
+
 )
 target_link_libraries(Risk Qt${QT_VERSION_MAJOR}::Core)
 

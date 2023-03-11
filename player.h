@@ -26,23 +26,25 @@ public:
     void deployTroops(int troopsCount);
 
     void attack();
+    void forfeit();
+
     QList<int> getTerritoryNumbers() const;
     void setTerritoryNumbers();
 
     void showStatus();
 
 signals:
-    void requestForEnemyInfoSignal(int enemyIndex);
+    void requestForTerritoryInfoSignal(int enemyIndex);
 
 public slots:
     void fetchContinetInfo(const QMap<QString, QList<int>>);
-    void fetchEnemyTerritory(Territory*);
+    void fetchRequestedTerritory(Territory*);
 
 private:
     QTextStream stream;
     int number;
 
-    Territory* enemyTerritory;
+    Territory* requestedTerritory;
     QList<Territory*> territories;
     QList<int> territoryNumbers;
 
@@ -57,7 +59,9 @@ private:
     QList<int> rollDice(int);
 
     void attackPhase(Territory*, Territory*);
-    void transferTroops(Territory*, Territory*);
+    void transferTroops(Territory*, Territory*, bool);
+
+void getConnectedTerritories(Territory*, QList<int>&);
 
 };
 
